@@ -12,3 +12,4 @@ Informações para resolução das questões:
 ## Questões(Projetos):
 
 * **Questão 1:** arquitetura-baseada-em-objetos-rmi
+* **Questão 1:** replicador-dados-camadas/
