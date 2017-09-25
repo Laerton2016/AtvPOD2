@@ -22,23 +22,24 @@ public class App {
         Scanner in = new Scanner(System.in);
         
         try {
-            System.out.println("Digite uma opção:\n 1- somar \n 2-Subtrair");
+            System.out.print("Digite uma opção:\n 1- Multiplicar numeros com 2: "
+                    + "\n 2- Multiplicar com 2 e dividir pelo segundo numero: \n");
             optCalc = in.nextInt(); in.nextLine();
             
-            System.out.println("Digite o primeiro número:");
+            System.out.print("\n Digite o primeiro número:");
             x = in.nextDouble(); in.nextLine();
             
-            System.out.println("Digite o segundo número:");
+            System.out.print("\n Digite o segundo número:");
             y = in.nextDouble(); in.nextLine();
             
             switch(optCalc){
                 case 1: {
                     result = client.calculaSoma(x, y);
-                    System.out.println("O resultado da soma eh: " + result);
+                    System.out.println("O resultado da opçao 1 eh: " + result);
                 } break;
                 case 2: {
                     result = client.calculaDiferenca(x, y);
-                    System.out.println("O resultado da subtracao2 eh: " + result);
+                    System.out.println("O resultado da  opcao 2 eh: " + result);
                 } break;
                 default: {
                     System.out.println("Você não escolheu uma opção válida "
