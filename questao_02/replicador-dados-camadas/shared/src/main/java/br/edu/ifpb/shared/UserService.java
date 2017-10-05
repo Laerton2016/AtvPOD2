@@ -14,6 +14,6 @@ import java.rmi.RemoteException;
  */
 public interface UserService extends Remote {
     
-    void persist(User user) throws RemoteException;
+    void post(User user) throws RemoteException;
     
 }

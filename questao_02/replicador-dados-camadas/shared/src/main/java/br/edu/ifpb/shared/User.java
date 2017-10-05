@@ -18,6 +18,11 @@ public class User implements Serializable {
     public User() {
     }
 
+    public User(int codigo, String name) {
+        this.codigo = codigo;
+        this.name = name;
+    }
+    
     public int getCodigo() {
         return codigo;
     }

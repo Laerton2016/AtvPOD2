@@ -16,12 +16,15 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class UserServiceImpl extends UnicastRemoteObject implements UserService {
 
+    private GerenciadorPersistencia gerenciador;
+    
     public UserServiceImpl() throws RemoteException {
+        this.gerenciador = new GerenciadorPersistencia();
     }
     
     @Override
-    public void persist(User user) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public void post(User user) throws RemoteException {
+        gerenciador.persist(user);
     }
     
 }
