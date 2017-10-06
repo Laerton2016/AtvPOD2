@@ -16,14 +16,16 @@ public class Gerenciador
         private int count = 0;
 	private int fail = 0;
 	private final Queue Q0;
+        private final Queue Q1;
         
 
 	private Pessoa createPeople(){
 		return new Pessoa(count++);
 	}
 	
-	public Gerenciador(Queue Q0) {
+	public Gerenciador(Queue Q0, Queue Q1) {
 		this.Q0 = Q0;
+                this.Q1 = Q1;
                 
 	}
 	
