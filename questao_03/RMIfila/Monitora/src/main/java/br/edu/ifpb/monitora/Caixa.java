@@ -13,20 +13,25 @@ public class Caixa {
     private int count = 0;
     private final Queue queue;
     private Pessoa current = null;
+    private String name ;
 
-    public Caixa(Queue queue) {
+    public Caixa(Queue queue, String name ) {
         this.queue = queue;
+        this.name = name;
     }
+
+    
 	
 	public void startService(){
 		current = this.queue.pop();
-		System.out.println("Iniciando o atendimento ao cliente " + current.getId());
+		System.out.println("Iniciando o atendimento ao cliente " + current.getId() + " no " + this.name);
 	}
 	
 	public void stopService(){
-		System.out.println("Encerrando o atendimento ao cliente " + current.getId());
-		current = null;
+		
 		count++;
+                System.out.println("Encerrando o atendimento ao cliente " + current.getId()+ " no " + this.name + " de um total de " + count);
+                current = null;
 	}
 	
 	public int count(){

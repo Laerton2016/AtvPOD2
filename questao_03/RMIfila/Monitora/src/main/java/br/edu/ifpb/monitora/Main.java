@@ -14,9 +14,9 @@ public class Main {
     public static void main(String[] args) {
         Queue Q0 =new Queue(100);
         Queue Q1 =new Queue(50);
-        Caixa cx1 = new Caixa(Q0);
-        Caixa cx2 = new Caixa(Q0);
-        Caixa cx3 = new Caixa(Q1);
+        Caixa cx1 = new Caixa(Q0, "Caixa1");
+        Caixa cx2 = new Caixa(Q0, "Caixa2");
+        Caixa cx3 = new Caixa(Q1, "Caixa3");
         Gerenciador G1 = new Gerenciador(Q0);
         Gerenciador G2 = new Gerenciador(Q1);
         Engine eng = new Engine(G1, G2, cx1, cx2, cx3, Q0, Q1);

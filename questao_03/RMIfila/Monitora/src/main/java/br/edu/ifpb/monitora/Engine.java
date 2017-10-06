@@ -61,12 +61,12 @@ public class Engine {
 						}
 						System.out.println("[T0] Time: " + timef + "s");
 					}
-					if(timef == 599 && printed == false){
+					if(timef == 59 && printed == false){
 						fim = true;
 						printed = true;
 						System.out.println("[T0] The end!");
 					}
-					if(timef == 600){
+					if(timef == 60){
 						printAll();
 						break;
 					}
@@ -84,30 +84,8 @@ public class Engine {
          * Obtem valor de X
          * @return X sedo 0<=X<1
          */
-        private double obterx (){
-            /*Runnable r1 = new Runnable() {
-                @Override
-                public void run() {
-                    int time =0;
-                    while(fim == false){
-                        synchronized (t0) {
-                            try {
-                                t0.wait();
-                            } 
-                            catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (++time == 1){
-                            vx =  Math.random();
-                            time = 0;
-                        }
-                    }
-                }
-            };
-        Thread t1 = new Thread(r1);
-        t1.start();*/
-        return Math.random();
+        private double obterX (){
+            return Math.random();
         }
         /**
          * Retorna o  tempo de entrada de pessoa na Q0 
@@ -150,8 +128,8 @@ public class Engine {
                 double x = 0;
                 
                 while(fim == false){
-                    x = obterx();
-                    System.out.println("valor de X" + x);
+                    x = obterX();
+                    System.out.println("valor de X: " + x);
                     synchronized (t0) {
                         
                         try {
@@ -168,7 +146,7 @@ public class Engine {
                         time = 0;
                         System.out.println("[T1] Ocorreu a entrada de " + qtQ0 + " pessoa(s) na fila Q0.");
                         System.out.println("[T1] Ocorreu a entrada de " + qtQ1 + " pessoa(s) ba fila Q1.");
-                        obterx();
+                        obterX();
                     }
                     else {
                         System.out.println("[T1] Aguardando a entrada de pessoas.");
@@ -186,7 +164,7 @@ public class Engine {
      */
     private void atendimento()
     {
-        double tempoX = getHx(obterx());
+        double tempoX = getHx(obterX());
         Runnable r2 = criaAtendimento(this.caixa1,tempoX);
         Runnable r3 = criaAtendimento(this.caixa2, tempoX);
         Runnable r4 = criaAtendimento(this.caixa3, tempoX);
@@ -209,10 +187,7 @@ public class Engine {
     }
    
     public void exec(){
-        
-            
             temporizador();
-            //obterx();//Recebe valor de X 
             gerenciadorDeEntrada(); // Repassa ovalor de X para o Gerenciador
             atendimento(); // Repassa o valor de X para Atendimento
     }   
