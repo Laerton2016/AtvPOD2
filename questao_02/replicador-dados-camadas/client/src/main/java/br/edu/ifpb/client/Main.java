@@ -6,6 +6,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sun.misc.VM;
 
 /**
  *
@@ -16,6 +19,9 @@ import java.util.concurrent.Executors;
 
 public class Main {
 
+    private static Object lock = new Object();
+    private static volatile int codigo = 0;
+    
     public static void testaCarga100Users() throws RemoteException, NotBoundException {
         UserServiceClient service = new UserServiceClient();
         long initial = System.currentTimeMillis();
@@ -39,8 +45,27 @@ public class Main {
     }
     
     public static void testaCarga1000UsersWithThread() throws RemoteException, NotBoundException {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        Runnable runnable = () -> {
+            try {
+                System.out.println("Tempo inicial para a Thread:" + System.currentTimeMillis());
+                UserServiceClient service = new UserServiceClient();
+                User user = new User(getCodigo(), "nome qualquer");
+                for(int i = 0; i < 100; i++) {
+                    service.post(user);
+                }
+                System.out.println("Tempo final para a Thread:" + System.currentTimeMillis());
+            } catch (RemoteException | NotBoundException ex) {
+                System.err.println(ex);
+            }
+        };
+        executor.submit(runnable);
+    }
+    
+    private static int getCodigo() {
+        synchronized(lock) {
+            return ++codigo;
+        }
     }
     
     public static void main(String[] args) throws RemoteException, NotBoundException {
