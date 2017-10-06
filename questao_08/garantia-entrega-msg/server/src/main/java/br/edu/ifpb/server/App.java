@@ -28,11 +28,7 @@ public class App {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    manager.notifySubscribers();
-                } catch (RemoteException ex) {
-                    ex.printStackTrace();
-                }
+                manager.notifySubscribers();
             }
         }, 1000, 10000);
     }

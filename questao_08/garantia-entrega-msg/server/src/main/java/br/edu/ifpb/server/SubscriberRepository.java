@@ -16,4 +16,11 @@ public class SubscriberRepository {
         
     }
     
+    public Subscriber find(String uuid) {
+        return null;
+    }
+    
+    public String[] listUUIDs() {
+        return null;
+    }
 }

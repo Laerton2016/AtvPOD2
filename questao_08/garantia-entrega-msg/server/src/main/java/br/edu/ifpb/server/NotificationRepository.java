@@ -1,6 +1,8 @@
 
 package br.edu.ifpb.server;
 
+import br.edu.ifpb.shared.Notification;
+
 /**
  *
  * @author miolivc
@@ -10,4 +12,15 @@ package br.edu.ifpb.server;
 
 public class NotificationRepository {
 
+    public void store(Notification notification) {
+        
+    }
+    
+    public Notification[] listNotifications(String uuid) {
+        return null;
+    }
+    
+    public void removeNotiications(String uuid) {
+        
+    }
 }
