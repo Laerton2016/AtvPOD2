@@ -16,23 +16,21 @@ public class Gerenciador
         private int count = 0;
 	private int fail = 0;
 	private final Queue Q0;
-        private final Queue Q1;
+        
         
 
 	private Pessoa createPeople(){
 		return new Pessoa(count++);
 	}
 	
-	public Gerenciador(Queue Q0, Queue Q1) {
+	public Gerenciador(Queue Q0) {
 		this.Q0 = Q0;
-                this.Q1 = Q1;
-                
 	}
 	
-	public int exec(){
+	public int exec(int qt){
 		//randomizando o número de pessoas a serem criadas (entrada)
-		Random r = new Random();
-		int qt = r.nextInt(5) + 1;
+		//Random r = new Random();
+		//int qt = r.nextInt(5) + 1;
 		//criando e encaminhando para a fila
 		for (int i = 0; i < qt; i++) {
 			Pessoa p = createPeople();

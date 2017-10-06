@@ -15,11 +15,13 @@ public class Engine {
         private Gerenciador gerQ0, gerQ1;
 	private Caixa caixa1, caixa2, caixa3;
 	private Queue q0, q1;
-	
 	private Thread t0 = null;
 	private boolean fim = false;
+        private double vx = 0;
 	
-	//
+	/***
+         * Printa o resultado 
+         */
 	private void printAll(){
 		System.out.println("-------------------------------------------------------");
 		System.out.println("Quantidade de pessoas que chegaram na Q0: " + gerQ0.count());
@@ -34,7 +36,9 @@ public class Engine {
 		System.out.println("-------------------------------------------------------");
 	}
 	
-	
+	/***
+         * Controla o tempo do cliclo de vida da aplicacao fixo em 600 Segundos
+         */
 	private void temporizador(){
 		Runnable r0 = new Runnable() {
 			@Override
@@ -76,71 +80,124 @@ public class Engine {
 		t0 = new Thread(r0);
 		t0.start();
 	}
-        
+        /***
+         * Obtem valor de X
+         * @return X sedo 0<=X<1
+         */
         private double obterx (){
-            Random gerador = new Random(100);
-            return gerador.nextInt()/100;
+            /*Runnable r1 = new Runnable() {
+                @Override
+                public void run() {
+                    int time =0;
+                    while(fim == false){
+                        synchronized (t0) {
+                            try {
+                                t0.wait();
+                            } 
+                            catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (++time == 1){
+                            vx =  Math.random();
+                            time = 0;
+                        }
+                    }
+                }
+            };
+        Thread t1 = new Thread(r1);
+        t1.start();*/
+        return Math.random();
         }
-        
+        /**
+         * Retorna o  tempo de entrada de pessoa na Q0 
+         * @param x 0<=x<1
+         * @return Numero de pessoas 
+         */
         private int getFx(double  x)
         {
-            return (int) (0.833*(Math.exp(x*-1))) ;
+            return (int) Math.round(0.833*(Math.exp(x*-1))) ;
         }
-        
+        /***
+         * Encontra o numero de pessoas por segundo que entra na fila Q1
+         * @param x = 0<=x<1
+         * @return Numero de pessoas 
+         */
         private int getGx(double x)
         {
-            return (int) (3*(Math.pow(x, 2)) + 5);
+            return (int)  Math.round(2*x);
         }
         
-        private int getHx(Double x)
+        /***
+         * Encontra o numero de pessoas por segundo que sai das filas 
+         * @param x 0<=x<1
+         * @return Numero de pessoas
+         */
+        private double getHx(Double x)
         {
-            return (int) (15* (Math.pow(x, x)));
+            return (0.3* (Math.pow(x, x)));
         }
         
+        /***
+         * Gerencia a entrada de pessoas nas filas 
+         * @param valorX Valor de X entre 0<=x<1
+         */
 	private void gerenciadorDeEntrada(){
-		Runnable r1 = new Runnable() {
-			@Override
-			public void run() {
-				int time = 0;
-                                double x = 0;
-				while(fim == false){
-					//
-					synchronized (t0) {
-						try {
-							t0.wait();
-						} 
-						catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-					
-					if (++time == 1){
-                                                //Obtem valores de X e numeros de pessoas para cada pessoa.
-                                                double valorX = obterx();
-						int qtQ0 = gerQ0.exec(getFx(valorX));
-                                                int qtQ1 = gerQ1.exec(getGx(valorX));
-						time = 0;
-						System.out.println("[T1] Ocorreu a entrada de " + qtQ0 + " pessoa(s) na fila Q0.");
-                                                System.out.println("[T1] Ocorreu a entrada de " + qtQ1 + " pessoa(s) ba fila Q1.");
-					}
-					else {
-						System.out.println("[T1] Aguardando a entrada de pessoas.");
-					}
-				}
-			}
-		};
-		//
-		Thread t1 = new Thread(r1);
-		t1.start();
-	}
-	
-private void atendimento(){
-    Runnable r2 = criaAtendimento(this.caixa1);
-        Thread t2 = new Thread(r2);
-        t2.start();
+            Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                int time = 0;
+                double x = 0;
+                
+                while(fim == false){
+                    x = obterx();
+                    System.out.println("valor de X" + x);
+                    synchronized (t0) {
+                        
+                        try {
+                            t0.wait();
+                        } 
+                        catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (++time == 1){
+                        //Obtem valores de X e numeros de pessoas para cada pessoa.
+                        int qtQ0 = gerQ0.exec(getFx(x));
+                        int qtQ1 = gerQ1.exec(getGx(x));
+                        time = 0;
+                        System.out.println("[T1] Ocorreu a entrada de " + qtQ0 + " pessoa(s) na fila Q0.");
+                        System.out.println("[T1] Ocorreu a entrada de " + qtQ1 + " pessoa(s) ba fila Q1.");
+                        obterx();
+                    }
+                    else {
+                        System.out.println("[T1] Aguardando a entrada de pessoas.");
+                    }
+		}
+            }
+	};
+	Thread t1 = new Thread(r1);
+        t1.start();
     }
-
         
+    /***
+     * Gerencia o atendimentos por cada caixa de pessoas das filas
+     * @param valorX Valor de X 0<=x<1 
+     */
+    private void atendimento()
+    {
+        double tempoX = getHx(obterx());
+        Runnable r2 = criaAtendimento(this.caixa1,tempoX);
+        Runnable r3 = criaAtendimento(this.caixa2, tempoX);
+        Runnable r4 = criaAtendimento(this.caixa3, tempoX);
+        Thread t2 = new Thread(r2);
+        Thread t3 = new Thread(r3);
+        Thread t4 = new Thread(r4);
+        t2.start();
+        t3.start();
+        t4.start();
+
+    }
     public Engine(Gerenciador gerQ0, Gerenciador gerQ1, Caixa caixa1, Caixa caixa2,Caixa caixa3, Queue q0, Queue q1) {
         this.gerQ0 = gerQ0;
         this.gerQ1 = gerQ1;
@@ -150,54 +207,56 @@ private void atendimento(){
         this.q0 = q0;
         this.q1 = q1;
     }
-
-	
+   
+    public void exec(){
         
-	public void exec(){
-		temporizador();
-		gerenciadorDeEntrada();
-		atendimento();
-	}   
+            
+            temporizador();
+            //obterx();//Recebe valor de X 
+            gerenciadorDeEntrada(); // Repassa ovalor de X para o Gerenciador
+            atendimento(); // Repassa o valor de X para Atendimento
+    }   
 
-    private Runnable criaAtendimento(Caixa caixa) {
+    private Runnable criaAtendimento(Caixa caixa, double tempoX) {
         return new Runnable() {
-        @Override
-	public void run() {
-	   while(fim == false){
-	        synchronized (t0) {
+            @Override
+            public void run() {
+                int x = (int) Math.round(1/tempoX);//Encontra o tempo em segundos de atedimento.
+                while(fim == false){
+                    synchronized (t0) {
+                        try {
+                            t0.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     try {
-			t0.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println("[T2] Verifacar se há atendimento para caixa.");
+                        System.out.print  ("[T2] ");
+                        caixa.startService();
+                    } 
+                    catch (RuntimeException e){
+                        System.out.println("Ninguém para atendimento.");
+                        continue;
+                    }
+                    int time = 0;
+                    while(true){
+                        synchronized (t0) {
+                            try {
+                                t0.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        //Tempo varia de acordo com tempoX (H(x)) variando a pouco mais de 1s a 4s por pessoa
+                        if (++time == x){
+                            System.out.print("[T2] ");
+                            caixa.stopService();
+                            break;
+                        }
                     }
                 }
-            try {
-		System.out.println("[T2] Verifacar se há atendimento para caixa.");
-		System.out.print  ("[T2] ");
-		caixa.startService();
-            } 
-	    catch (RuntimeException e){
-                System.out.println("Ninguém para atendimento.");
-                continue;
             }
-            int time = 0;
-            while(true){
-                synchronized (t0) {
-                    try {
-			t0.wait();
-                    } catch (InterruptedException e) {
-			e.printStackTrace();
-                    }
-		}
-		
-		if (++time == 1){
-                    System.out.print("[T2] ");
-                    caixa.stopService();
-                    break;
-		}
-            }
-        }
-        }
-    };
+        };
     }
 }
