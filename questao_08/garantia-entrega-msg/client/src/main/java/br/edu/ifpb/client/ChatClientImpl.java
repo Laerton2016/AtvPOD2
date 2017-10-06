@@ -15,19 +15,19 @@ import java.rmi.RemoteException;
 
 public class ChatClientImpl implements Subscriber {
 
+    private final Publisher publisher;
+    
     public ChatClientImpl(Publisher publisher) {
-        
+        this.publisher = publisher;
     }
 
-    public void sendMessage(Message message) {
-        
+    public void sendMessage(Message message) throws RemoteException {
+        publisher.publish(message);
     }
 
     @Override
     public void update(Message msg) throws RemoteException {
         
     }
-    
-    
 
 }
