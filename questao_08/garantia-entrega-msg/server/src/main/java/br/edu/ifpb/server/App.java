@@ -7,6 +7,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,7 +33,7 @@ public class App {
                 try {
                     manager.notifySubscribers();
                 } catch (RemoteException ex) {
-                    ex.printStackTrace();
+                    System.err.println("Erro ao notificar: " + ex);
                 }
             }
         }, 1000, 10000);
